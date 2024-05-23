@@ -18,29 +18,61 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 80%;
+            margin: 0 auto;
         }
         .controls {
-            margin-bottom: 20px;
+            margin: 20px;
         }
         .chart {
-            width: 800px;
-            height: 600px;
+            width: 100%;
             background-color: #fff;
             margin: 10px;
+            border-radius: 8px;
+            overflow: hidden;
         }
         img {
             max-width: 100%;
             height: auto;
         }
+        .navigation {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007BFF;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
     <div id="app">
-        <div class="controls">
-            <button @click="startStream">Start Stream</button>
+        <div class="navigation" v-if="view === 'home'">
+            <button @click="goToRecord">Record Audio</button>
+            <button @click="goToStream">View Real-time Stream</button>
         </div>
-        <div class="chart">
+
+        <div class="controls" v-if="view === 'stream'">
+            <button @click="startStream">Start Stream</button>
+            <button @click="stopStream">Stop Stream</button>
+            <button @click="goHome">Back to Home</button>
+        </div>
+        <div class="chart" v-if="view === 'stream'">
             <img :src="'data:image/png;base64,' + image" alt="Real-time Waveform and Spectrogram">
+        </div>
+
+        <div class="controls" v-if="view === 'record'">
+            <button @click="recordAudio">Record</button>
+            <button @click="goHome">Back to Home</button>
         </div>
     </div>
 
@@ -48,16 +80,49 @@
         const app = Vue.createApp({
             data() {
                 return {
-                    image: ''
+                    image: '',
+                    view: 'home'
                 };
             },
             methods: {
                 startStream() {
-                    const socket = io();
-                    socket.emit('start_stream');
-                    socket.on('update_image', (img_base64) => {
+                    this.socket = io();
+                    this.socket.emit('start_stream');
+                    this.socket.on('update_image', (img_base64) => {
                         this.image = img_base64;
                     });
+                },
+                stopStream() {
+                    if (this.socket) {
+                        this.socket.emit('stop_stream');
+                    }
+                },
+                recordAudio() {
+                    fetch('/record', { method: 'POST' })
+                        .then(response => response.blob())
+                        .then(blob => {
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.style.display = 'none';
+                            a.href = url;
+                            a.download = 'output_audio.wav';
+                            document.body.appendChild(a);
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                        })
+                        .catch(console.error);
+                },
+                goToRecord() {
+                    this.view = 'record';
+                },
+                goToStream() {
+                    this.view = 'stream';
+                },
+                goHome() {
+                    this.view = 'home';
+                    if (this.socket) {
+                        this.socket.emit('stop_stream');
+                    }
                 }
             }
         });
