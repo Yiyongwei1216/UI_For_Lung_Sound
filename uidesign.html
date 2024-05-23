@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Health Management Dashboard</title>
+    <link rel="stylesheet" href="https://unpkg.com/@layui/layui-vue@2.17.3/lib/index.css" />
+    <script src="https://unpkg.com/vue@3.4.27/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/@layui/layui-vue@2.17.3"></script>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #2e3b4e;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        #app {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 10px;
+            width: 90%;
+            height: 90%;
+        }
+        .box {
+            background-color: #3b4a5a;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .header {
+            grid-column: span 3;
+            background-color: #2e3b4e;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+        }
+        .main-content {
+            grid-column: span 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .bottom-section {
+            grid-column: span 3;
+            display: flex;
+            justify-content: space-between;
+        }
+        .chart {
+            height: 200px;
+            background: #4b5a6a;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="header box">主动健康管理支持中心</div>
+        <div class="box">数据总览
+            <div class="chart"></div>
+        </div>
+        <div class="box">服务人群
+            <div class="chart"></div>
+        </div>
+        <div class="main-content">
+            <div class="box">今日检测数据
+                <div class="chart"></div>
+            </div>
+            <div class="box">累计检测数据
+                <div class="chart"></div>
+            </div>
+        </div>
+        <div class="sidebar">
+            <div class="box">疾病预警
+                <div class="chart"></div>
+            </div>
+        </div>
+        <div class="bottom-section">
+            <div class="box">今日测量
+                <div class="chart"></div>
+            </div>
+            <div class="box">实时数据
+                <div class="chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        const App = {
+            template: `
+                <div>
+                    <div class="header box">主动健康管理支持中心</div>
+                    <div class="box">数据总览
+                        <div class="chart"></div>
+                    </div>
+                    <div class="box">服务人群
+                        <div class="chart"></div>
+                    </div>
+                    <div class="main-content">
+                        <div class="box">今日检测数据
+                            <div class="chart"></div>
+                        </div>
+                        <div class="box">累计检测数据
+                            <div class="chart"></div>
+                        </div>
+                    </div>
+                    <div class="sidebar">
+                        <div class="box">疾病预警
+                            <div class="chart"></div>
+                        </div>
+                    </div>
+                    <div class="bottom-section">
+                        <div class="box">今日测量
+                            <div class="chart"></div>
+                        </div>
+                        <div class="box">实时数据
+                            <div class="chart"></div>
+                        </div>
+                    </div>
+                </div>
+            `
+        };
+
+        createApp(App).mount('#app');
+    </script>
+</body>
+</html>
